@@ -1,0 +1,623 @@
+{
+	"info": {
+		"name": "CoopCredit API",
+		"description": "Colección completa de endpoints para el sistema CoopCredit",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\",\n  \"role\": \"ADMIN\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					}
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.environment.set(\"authToken\", jsonData.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Affiliates",
+			"item": [
+				{
+					"name": "Create Affiliate",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"María González\",\n  \"email\": \"maria@example.com\",\n  \"document\": \"9876543210\",\n  \"salary\": 5000000\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/affiliates",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"affiliates"
+							]
+						}
+					}
+				},
+				{
+					"name": "Update Affiliate",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"María González\",\n  \"email\": \"maria.nueva@example.com\",\n  \"document\": \"9876543210\",\n  \"salary\": 5500000\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/affiliates/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"affiliates",
+								"1"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Credit Applications",
+			"item": [
+				{
+					"name": "Create Credit Application",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.environment.set(\"applicationId\", jsonData.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"affiliateId\": 1,\n  \"amount\": 10000000,\n  \"term\": 24,\n  \"rate\": 1.5,\n  \"purpose\": \"Compra de vehículo\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/credit-applications",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"credit-applications"
+							]
+						}
+					}
+				},
+				{
+					"name": "Evaluate Credit Application",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/credit-applications/{{applicationId}}/evaluate",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"credit-applications",
+								"{{applicationId}}",
+								"evaluate"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Credit Applications",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/credit-applications",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"credit-applications"
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Small Loan (Approved)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"affiliateId\": 1,\n  \"amount\": 5000000,\n  \"term\": 12,\n  \"rate\": 1.2,\n  \"purpose\": \"Compra de electrodomésticos\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/credit-applications",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"credit-applications"
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Large Loan (May be Rejected)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"affiliateId\": 1,\n  \"amount\": 45000000,\n  \"term\": 60,\n  \"rate\": 2.0,\n  \"purpose\": \"Compra de vivienda\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/credit-applications",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"credit-applications"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Risk Service",
+			"item": [
+				{
+					"name": "Evaluate Risk - Low Amount",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"documento\": \"9876543210\",\n  \"monto\": 5000000,\n  \"plazo\": 12\n}"
+						},
+						"url": {
+							"raw": "{{riskServiceUrl}}/risk-evaluation",
+							"host": [
+								"{{riskServiceUrl}}"
+							],
+							"path": [
+								"risk-evaluation"
+							]
+						}
+					}
+				},
+				{
+					"name": "Evaluate Risk - High Amount",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"documento\": \"9876543210\",\n  \"monto\": 50000000,\n  \"plazo\": 60\n}"
+						},
+						"url": {
+							"raw": "{{riskServiceUrl}}/risk-evaluation",
+							"host": [
+								"{{riskServiceUrl}}"
+							],
+							"path": [
+								"risk-evaluation"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Actuator",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/actuator/health",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"actuator",
+								"health"
+							]
+						}
+					}
+				},
+				{
+					"name": "Metrics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/actuator/metrics",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"actuator",
+								"metrics"
+							]
+						}
+					}
+				},
+				{
+					"name": "Info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/actuator/info",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"actuator",
+								"info"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Complete Workflow",
+			"item": [
+				{
+					"name": "1. Register Admin",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\",\n  \"role\": \"ADMIN\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					}
+				},
+				{
+					"name": "2. Login as Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.environment.set(\"authToken\", jsonData.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					}
+				},
+				{
+					"name": "3. Create Affiliate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.environment.set(\"affiliateId\", jsonData.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Juan Pérez\",\n  \"email\": \"juan@example.com\",\n  \"document\": \"1234567890\",\n  \"salary\": 8000000\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/affiliates",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"affiliates"
+							]
+						}
+					}
+				},
+				{
+					"name": "4. Create Credit Application",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.environment.set(\"applicationId\", jsonData.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"affiliateId\": {{affiliateId}},\n  \"amount\": 15000000,\n  \"term\": 36,\n  \"rate\": 1.5,\n  \"purpose\": \"Compra de vehículo\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/credit-applications",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"credit-applications"
+							]
+						}
+					}
+				},
+				{
+					"name": "5. Evaluate Application",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/credit-applications/{{applicationId}}/evaluate",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"credit-applications",
+								"{{applicationId}}",
+								"evaluate"
+							]
+						}
+					}
+				},
+				{
+					"name": "6. Get All Applications",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/credit-applications",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"credit-applications"
+							]
+						}
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "riskServiceUrl",
+			"value": "http://localhost:8081",
+			"type": "string"
+		},
+		{
+			"key": "authToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "affiliateId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "applicationId",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

@@ -1,0 +1,7 @@
+/home/coders/Cop-credit/risk-central-mock-service/src/main/java/com/coopcredit/riskmock/service/RiskService.java
+/home/coders/Cop-credit/risk-central-mock-service/src/main/java/com/coopcredit/riskmock/controller/RiskController.java
+/home/coders/Cop-credit/risk-central-mock-service/src/main/java/com/coopcredit/riskmock/RiskCentralMockApplication.java
+/home/coders/Cop-credit/risk-central-mock-service/src/main/java/com/coopcredit/riskmock/config/OpenApiConfig.java
+/home/coders/Cop-credit/risk-central-mock-service/src/main/java/com/coopcredit/riskmock/exception/GlobalExceptionHandler.java
+/home/coders/Cop-credit/risk-central-mock-service/src/main/java/com/coopcredit/riskmock/model/RiskEvaluationRequest.java
+/home/coders/Cop-credit/risk-central-mock-service/src/main/java/com/coopcredit/riskmock/model/RiskEvaluationResponse.java

@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: coopcredit-db
+    environment:
+      POSTGRES_DB: credit_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U admin -d credit_db" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  risk-central-mock-service:
+    build:
+      context: ./risk-central-mock-service
+      dockerfile: Dockerfile
+    container_name: risk-central-mock
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_APPLICATION_NAME: risk-central-mock-service
+      SERVER_PORT: 8081
+
+  credit-application-service:
+    build:
+      context: ./credit-application-service
+      dockerfile: Dockerfile
+    container_name: credit-application
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/credit_db
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: password
+      APP_RISK_SERVICE_URL: http://risk-central-mock-service:8081
+      APP_JWT_SECRET: ThisIsASecretKeyThatIsBigEnoughForHS512AlgorithmRequirementsAndSecure
+      APP_JWT_EXPIRATION: 3600000
+    depends_on:
+      db:
+        condition: service_healthy
+      risk-central-mock-service:
+        condition: service_started
